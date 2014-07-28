@@ -173,8 +173,8 @@ $(function () {
     });
 
     $("#loading-btn").click(function(){
-    	var sd = $('#datetimepicker8 input').val()+" 00:00:00";
-    	var ed = $('#datetimepicker9 input').val()+" 23:59:59";
+    	var sd = $('#datetimepicker8 input').val();
+    	var ed = $('#datetimepicker9 input').val();
     	getListByDate({"since":sd,"before":ed });
     	return false;
     });
@@ -222,8 +222,8 @@ function onAuthorizeSuccessful() {
 function getListByDate(argJson){
 	if(!argJson){
 		var argJson = {
-			since : getWeekStartDate() +" 00:00:00",
-			before : getWeekEndDate() +" 23:59:59"
+			since : getWeekStartDate(),
+			before : getWeekEndDate()
 		}
 	}
     var $cards = $("#followingBallsG").css("visibility","visible");
