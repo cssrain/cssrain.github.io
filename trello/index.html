@@ -174,7 +174,7 @@ $(function () {
 
     $("#loading-btn").click(function(){
     	var sd = $('#datetimepicker8 input').val();
-    	var ed = $('#datetimepicker9 input').val();
+    	var ed = $('#datetimepicker9 input').val()+"T23:59:59.999Z";
     	getListByDate({"since":sd,"before":ed });
     	return false;
     });
@@ -223,7 +223,7 @@ function getListByDate(argJson){
 	if(!argJson){
 		var argJson = {
 			since : getWeekStartDate(),
-			before : getWeekEndDate()
+			before : getWeekEndDate()+"T23:59:59.999Z"
 		}
 	}
     var $cards = $("#followingBallsG").css("visibility","visible");
