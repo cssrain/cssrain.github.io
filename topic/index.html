@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="apple-touch-icon" href="touch-icon.png" />
+    <link rel="apple-touch-icon-precomposed" href="touch-icon.png" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="css/css3loading.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="css/print.css" media="print">
+</head>
+<body> 
+
+<div class="container">
+    <div class="row">
+    	
+        <div class="jumbotron" id="loggedout">
+            <h1>前端题库</h1>
+            <p class="lead">一键生成面试题目，让你不再四处找面试题。</p>
+            <p><a class="btn btn-lg btn-success" href="javascript:;" role="button" id="connectLink">马上使用</a></p>
+        </div>
+        
+        <div class="panelwrap" id="panelwrap">
+       		<div id="loggedin" class="menu">
+				<div id="followingBallsG">
+					<div id="followingBallsG_1" class="followingBallsG">
+					</div>
+					<div id="followingBallsG_2" class="followingBallsG">
+					</div>
+					<div id="followingBallsG_3" class="followingBallsG">
+					</div>
+					<div id="followingBallsG_4" class="followingBallsG">
+					</div>
+				</div>
+
+		        <div class="panel panel-info" id="panel-info">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">试卷</h3>
+					  </div>
+					  <div class="panel-body" >
+						  	<div id="outputDone"></div>
+							<button type="button" id="print-btn" class="btn btn-primary">
+							打印
+							</button>
+							<button type="button" id="again-btn" class="btn btn-primary">
+							重新生成
+							</button>
+					  </div>
+
+				</div>
+
+			</div>
+		</div>
+ 
+    </div>
+</div>
+
+<div id="prewDone"></div>
+
+<script id="entry-template" type="text/x-handlebars-template">
+	{{#each this}}
+		<h5>{{@key}}<h5>
+		{{#each this}}
+		<h6>{{each_with_index @index}},{{this}}</h6>
+		{{/each}}
+	{{/each}}
+</script>
+
+<script type="text/javascript" src="../trello/res/lib/jquery/2.1.1/jquery.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js" ></script>
+<script src="../trello/res/lib/handlebars/1.1.2/handlebars.min.js" ></script>
+
+<script>
+$(function(){
+	$("#connectLink").click(function(){
+		$("#loggedout").hide();
+		$("#panelwrap").show();
+		$("#followingBallsG").css("visibility","visible");
+		setTimeout(function(){
+			$.getJSON( "topic.json", function(data) {
+				var titleArr = {};
+				$.each(data,function(k,v){
+					titleArr[k] = getArrayItems( v , 10 ) ;
+				});
+				//console.log(titleArr);
+				var source   = $("#entry-template").html();
+				var template = Handlebars.compile(source);
+				var html    = template(titleArr);
+				$("#outputDone,#prewDone").html( html );
+				$("#panel-info").show();
+
+				$("#followingBallsG").css("visibility","hidden");
+			});
+		},2000);
+	});
+	$("#print-btn").click(function(){
+		window.print();
+	});
+	$("#again-btn").click(function(){
+		$("#connectLink").click();
+	});
+})
+
+//从一个给定的数组arr中,随机返回num个不重复项
+function getArrayItems(arr, num) {
+    //新建一个数组,将传入的数组复制过来,用于运算,而不要直接操作传入的数组;
+    var temp_array = new Array();
+    for (var index in arr) {
+        temp_array.push(arr[index]);
+    }
+    //取出的数值项,保存在此数组
+    var return_array = new Array();
+    for (var i = 0; i<num; i++) {
+        //判断如果数组还有可以取出的元素,以防下标越界
+        if (temp_array.length>0) {
+            //在数组中产生一个随机索引
+            var arrIndex = Math.floor(Math.random()*temp_array.length);
+            //将此随机索引的对应的数组元素值复制出来
+            return_array[i] = temp_array[arrIndex];
+            //然后删掉此索引的数组元素,这时候temp_array变为新的数组
+            temp_array.splice(arrIndex, 1);
+        } else {
+            //数组中数据项取完后,退出循环,比如数组本来只有10项,但要求取出20项.
+            break;
+        }
+    }
+    return return_array;
+}
+/**
+ * 带序号的循环
+ * {{index}}为序号。
+ * eg ：
+ * {{#each_with_index array}}
+ *    {{index}}
+ * {{/each_with_index}}
+ */
+Handlebars.registerHelper("each_with_index", function(a, fn) {
+    return parseInt(a)+1;
+});
+</script>
+</body>
+</html>

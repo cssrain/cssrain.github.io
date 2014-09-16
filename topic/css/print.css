@@ -1,0 +1,8 @@
+.container{
+	display:none;
+}
+h5{font-weight: bold;font-size: 14px;}
+h6{font-size:12px;padding:10px 0;}
+#prewDone{ 
+    display:block;
+}
